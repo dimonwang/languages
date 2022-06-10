@@ -7,6 +7,6 @@ all:
 	gcc -o main1 main.c -Wl,--whole-archive -lmya -Wl,--no-whole-archive -I./liba/ -L./liba/ 
 
 clean:
-	rm -f *.o main
+	rm -f *.o main main1
 	make -C liba clean
 
