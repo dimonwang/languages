@@ -1,0 +1,9 @@
+prefix=/usr
+libdir=${prefix}/lib/x86_64-linux-gnu
+includedir=${prefix}/include
+
+Name: Dimon test pkg-config
+Description: Dimon test library and headers.
+Version: 0.1
+Libs: -L${libdir} -ldimon
+Cflags: -I${includedir}
