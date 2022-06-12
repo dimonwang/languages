@@ -1,0 +1,18 @@
+str = "hello from dimon"
+
+rule say_hello
+    command = echo $str
+
+rule cc
+    command = gcc -o $out -c $in
+
+rule link
+    command = gcc -o $out $in
+
+build main.o: cc main.c
+
+build say_hello: say_hello
+build main: link main.o | say_hello
+build all: phony main
+
+default all
