@@ -1,9 +1,5 @@
 #include<stdio.h>
-
-static int test() {
-	printf("in test\n");
-	return 0;
-}
+#include "test.h"
 
 int main(void) {
 	int i = 1000000000;

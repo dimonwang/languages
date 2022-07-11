@@ -1,8 +1,7 @@
 #!/bin/sh
 set +x
 
-EXEC="./main"
-$EXEC &
+./main &
 
 PID=$(ps -ef | grep main | grep -v grep | awk '{print $2}')
 sudo perf record -F 99 -p ${PID} -g -- sleep 60
