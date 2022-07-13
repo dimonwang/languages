@@ -1,10 +1,13 @@
 .PHONY: all clean
-build:=~/NDK/android-ndk-r24/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang
-#build:=gcc
+cc:=~/NDK/android-ndk-r14b/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang
+cpp:=~/NDK/android-ndk-r14b/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang++
+#cc:=gcc
+#cpp:=g++
 all:
-	$(build) -c -g -finstrument-functions -o  test.o test.c
-	$(build) -c -g -finstrument-functions -o  instrument.o instrument.c
-	$(build) -g -o test test.o instrument.o
+	$(cpp) -shared -fPIC perfetto.cc -o libperfetto.so
+	$(cc) -c -g -finstrument-functions -o  test.o test.c
+	$(cc) -c -g -finstrument-functions -o  instrument.o instrument.c
+	$(cc) -g -o test test.o instrument.o
 
 clean:
 	rm -rf test *.o a.out instrument.log
