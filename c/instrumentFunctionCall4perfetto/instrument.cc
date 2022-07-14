@@ -84,11 +84,17 @@ void  __attribute__((no_instrument_function)) __cyg_profile_func_enter( void *fu
 {
     // instrument_print("Enter, call_site:%x\n func_addr:%x\n", call_site, func_addr);
 #define MAX_LEN 17
-    char effectiveAddr[MAX_LEN];
-    memset(effectiveAddr, 0, MAX_LEN);
-    snprintf(effectiveAddr, MAX_LEN-1, "%x", func_addr);
-    TRACE_EVENT_BEGIN(MINIGUI_TRACE_CATEGORY, effectiveAddr);
-//    printf("enter %p\n", effectiveAddr);
+    if (_flag == 0) return;
+    char virtualFuncAddr[MAX_LEN];
+    memset(virtualFuncAddr, 0, MAX_LEN);
+    snprintf(virtualFuncAddr, MAX_LEN-1, "%x", func_addr);
+
+    char virtualCallerAddr[MAX_LEN];
+    memset(virtualCallerAddr, 0, MAX_LEN);
+    snprintf(virtualCallerAddr, MAX_LEN-1, "%x", call_site);
+
+    TRACE_EVENT_BEGIN(MINIGUI_TRACE_CATEGORY, virtualFuncAddr);
+    printf("enter %x, caller %x\n", (void*)&virtualFuncAddr, (void*)&virtualCallerAddr);
 #undef MAX_LEN
 }
 
@@ -96,11 +102,16 @@ void  __attribute__((no_instrument_function)) __cyg_profile_func_exit( void *fun
 {
     // instrument_print("Exit, call_site:%x\n func_addr:%x\n", call_site, func_addr);
 #define MAX_LEN 17
-    char effectiveAddr[MAX_LEN];
-    memset(effectiveAddr, 0, MAX_LEN);
-    snprintf(effectiveAddr, MAX_LEN-1, "%x", func_addr);
+    if (_flag == 0) return;
+    char virtualFuncAddr[MAX_LEN];
+    memset(virtualFuncAddr, 0, MAX_LEN);
+    snprintf(virtualFuncAddr, MAX_LEN-1, "%x", func_addr);
+
+    char virtualCallerAddr[MAX_LEN];
+    memset(virtualCallerAddr, 0, MAX_LEN);
+    snprintf(virtualCallerAddr, MAX_LEN-1, "%x", call_site);
     TRACE_EVENT_END(MINIGUI_TRACE_CATEGORY);
-//    printf("exit %p\n", effectiveAddr);
+    printf("exit %x, caller %x\n", (void*)&virtualFuncAddr, (void*)&virtualCallerAddr);
 #undef MAX_LEN
 }
 

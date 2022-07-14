@@ -19,14 +19,14 @@ void d123456789flg(){}
 
 int main(void) {
     initialize();
-    printf("main:  %x\n", main);
-    printf("addmul:%x\n", addmul);
-    printf("mul:   %x\n", mul);
+    printf("main:  %x\n", (void*) main);
+    printf("addmul:%x\n", (void*) addmul);
+    printf("mul:   %x\n", (void*) mul);
     /* enable_instrument(); */
-    int round = 5000;
-    while(round-- > 0) {
+    int round = 0;
+    while(round++ < 500000) {
         int i = addmul(3,5);
-        printf("result:%d\n", i);
+        printf("round:%d,result:%d\n", round, i);
         sleep(1);
     }
     /* disable_instrument(); */
