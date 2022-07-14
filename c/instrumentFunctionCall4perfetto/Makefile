@@ -7,13 +7,13 @@ all: inst no_inst
 myperfetto:
 	$(cpp) -shared -fpic -std=c++11 -o libmyperfetto.so perfetto.cc
 
-inst: myperfetto
+inst:
 	$(cpp) -c -g -std=c++11 -fno-emulated-tls -o instrument.o instrument.cc
 	$(cc) -c -g -std=c11 -finstrument-functions -fno-emulated-tls -o  test_instrument.o test_instrument.c
 	$(cpp) -o test_instrument test_instrument.o instrument.o -L. -lmyperfetto -llog -pthread
 
-no_inst: myperfetto
-	$(cpp) -c -g -std=c++11 -o test_no_instrument.o test_no_instrument.cc
+no_inst: 
+	$(cpp) -c -g -std=c++11 -fno-emulated-tls -o test_no_instrument.o test_no_instrument.cc
 	$(cpp) -o test_no_instrument test_no_instrument.o -L. -lmyperfetto -llog -pthread
 
 clean:

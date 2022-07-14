@@ -94,7 +94,8 @@ void  __attribute__((no_instrument_function)) __cyg_profile_func_enter( void *fu
     snprintf(virtualCallerAddr, MAX_LEN-1, "%x", call_site);
 
     TRACE_EVENT_BEGIN(MINIGUI_TRACE_CATEGORY, virtualFuncAddr);
-    printf("enter %x, caller %x\n", (void*)&virtualFuncAddr, (void*)&virtualCallerAddr);
+    printf("%s:%x, enter %x, caller %x\n", __FUNCTION__, (void*) __cyg_profile_func_enter,
+            (void*)&virtualFuncAddr, (void*)&virtualCallerAddr);
 #undef MAX_LEN
 }
 
@@ -111,7 +112,8 @@ void  __attribute__((no_instrument_function)) __cyg_profile_func_exit( void *fun
     memset(virtualCallerAddr, 0, MAX_LEN);
     snprintf(virtualCallerAddr, MAX_LEN-1, "%x", call_site);
     TRACE_EVENT_END(MINIGUI_TRACE_CATEGORY);
-    printf("exit %x, caller %x\n", (void*)&virtualFuncAddr, (void*)&virtualCallerAddr);
+    printf("%s:%x, exit %x, caller %x\n", __FUNCTION__, (void*) __cyg_profile_func_exit, 
+            (void*)&virtualFuncAddr, (void*)&virtualCallerAddr);
 #undef MAX_LEN
 }
 

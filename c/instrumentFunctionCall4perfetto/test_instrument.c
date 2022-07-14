@@ -3,10 +3,12 @@
 #include <unistd.h>
 
 int mul(int i, int j) {
+    printf("%s:%x\n", __FUNCTION__, (void*) mul);
     return i*j;
 }
 
 int addmul(int i, int j) {
+    printf("%s\n", __FUNCTION__);
     int k1,k2;
     k1 = i+j;
     enable_instrument();
@@ -18,6 +20,7 @@ int addmul(int i, int j) {
 void d123456789flg(){}
 
 int main(void) {
+    printf("%s\n", __FUNCTION__);
     initialize();
     printf("main:  %x\n", (void*) main);
     printf("addmul:%x\n", (void*) addmul);
