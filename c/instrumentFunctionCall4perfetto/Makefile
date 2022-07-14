@@ -17,7 +17,9 @@ no_inst:
 	$(cpp) -o test_no_instrument test_no_instrument.o -L. -lmyperfetto -llog -pthread
 
 host:
-	$(host_cc) -g -finstrument-functions -o host_test host_instrument.c host_test_instrument.c
+	$(host_cc) -c -o host_instrument.o host_instrument.c
+	$(host_cc) -c -g -finstrument-functions -o host_test_instrument.o host_test_instrument.c
+	$(host_cc) -o host_test host_instrument.o host_test_instrument.o
 
 clean:
 	rm -rf test_instrument test_no_instrument *.o a.out instrument.log perfetto.o trace_file.perfetto-trace

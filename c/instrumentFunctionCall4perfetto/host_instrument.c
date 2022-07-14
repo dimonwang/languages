@@ -57,34 +57,34 @@ void  __attribute__((no_instrument_function, destructor)) main_destructor( void 
 void  __attribute__((no_instrument_function)) __cyg_profile_func_enter( void *func_addr, void *call_site )
 {
     // instrument_print("Enter, call_site:%x\n func_addr:%x\n", call_site, func_addr);
-#define MAX_LEN 17
+#define MAX_LEN 24
     if (_flag == 0) return;
     char virtualFuncAddr[MAX_LEN];
     memset(virtualFuncAddr, 0, MAX_LEN);
-    snprintf(virtualFuncAddr, MAX_LEN-1, "%x", func_addr);
+    snprintf(virtualFuncAddr, MAX_LEN-1, "%p", func_addr);
 
     char virtualCallerAddr[MAX_LEN];
     memset(virtualCallerAddr, 0, MAX_LEN);
-    snprintf(virtualCallerAddr, MAX_LEN-1, "%x", call_site);
+    snprintf(virtualCallerAddr, MAX_LEN-1, "%p", call_site);
 
-    printf("%s:%x, enter %x, caller %x\n", __FUNCTION__, (void*) __cyg_profile_func_enter,
-            (void*)&virtualFuncAddr, (void*)&virtualCallerAddr);
+    printf("%s:%p, enter %s, caller %s\n", __FUNCTION__, (void*) __cyg_profile_func_enter,
+            virtualFuncAddr, virtualCallerAddr);
 #undef MAX_LEN
 }
 
 void  __attribute__((no_instrument_function)) __cyg_profile_func_exit( void *func_addr, void *call_site )
 {
     // instrument_print("Exit, call_site:%x\n func_addr:%x\n", call_site, func_addr);
-#define MAX_LEN 17
+#define MAX_LEN 24
     if (_flag == 0) return;
     char virtualFuncAddr[MAX_LEN];
     memset(virtualFuncAddr, 0, MAX_LEN);
-    snprintf(virtualFuncAddr, MAX_LEN-1, "%x", func_addr);
+    snprintf(virtualFuncAddr, MAX_LEN-1, "%p", func_addr);
 
     char virtualCallerAddr[MAX_LEN];
     memset(virtualCallerAddr, 0, MAX_LEN);
-    snprintf(virtualCallerAddr, MAX_LEN-1, "%x", call_site);
-    printf("%s:%x, exit %x, caller %x\n", __FUNCTION__, (void*) __cyg_profile_func_exit, 
-            (void*)&virtualFuncAddr, (void*)&virtualCallerAddr);
+    snprintf(virtualCallerAddr, MAX_LEN-1, "%p", call_site);
+    printf("%s:%p, exit %s, caller %s\n", __FUNCTION__, (void*) __cyg_profile_func_exit, 
+            virtualFuncAddr, virtualCallerAddr);
 #undef MAX_LEN
 }
