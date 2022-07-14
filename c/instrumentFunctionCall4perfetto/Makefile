@@ -22,4 +22,4 @@ host:
 	$(host_cc) -o host_test host_instrument.o host_test_instrument.o
 
 clean:
-	rm -rf test_instrument test_no_instrument *.o a.out instrument.log perfetto.o trace_file.perfetto-trace
+	rm -rf test_instrument test_no_instrument *.o a.out instrument.log perfetto.o trace_file.perfetto-trace example.pftrace host_test

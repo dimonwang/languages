@@ -11,9 +11,9 @@ int addmul(int i, int j) {
     printf("%s\n", __FUNCTION__);
     int k1,k2;
     k1 = i+j;
-    enable_instrument();
+    //enable_instrument();
     k2=mul(i,j);
-    disable_instrument();
+    //disable_instrument();
     return k1+k2;
 }
 
@@ -25,14 +25,15 @@ int main(void) {
     printf("main:  %x\n", (void*) main);
     printf("addmul:%x\n", (void*) addmul);
     printf("mul:   %x\n", (void*) mul);
-    /* enable_instrument(); */
+    enable_instrument();
     int round = 0;
-    while(round++ < 500000) {
+    while(round++ < 5) {
         int i = addmul(3,5);
         printf("round:%d,result:%d\n", round, i);
         sleep(1);
     }
-    /* disable_instrument(); */
+    disable_instrument();
+    deinitialize();
 
     return 0;
 }
