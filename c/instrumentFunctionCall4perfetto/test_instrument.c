@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 int mul(int i, int j) {
-    printf("%s:%x\n", __FUNCTION__, (void*) mul);
+    printf("%s:%p\n", __FUNCTION__, (void*) mul);
     return i*j;
 }
 
@@ -22,9 +22,9 @@ void d123456789flg(){}
 int main(void) {
     printf("%s\n", __FUNCTION__);
     initialize();
-    printf("main:  %x\n", (void*) main);
-    printf("addmul:%x\n", (void*) addmul);
-    printf("mul:   %x\n", (void*) mul);
+    printf("main:  %p\n", (void*) main);
+    printf("addmul:%p\n", (void*) addmul);
+    printf("mul:   %p\n", (void*) mul);
     enable_instrument();
     int round = 0;
     while(round++ < 5) {
