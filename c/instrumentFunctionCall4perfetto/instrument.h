@@ -13,5 +13,5 @@ void initialize();
 #ifdef __cplusplus
 }
 #endif
-#define MINIGUI_TRACE_EVENT "Minigui-tracing"
+#define MINIGUI_TRACE_CATEGORY "minigui"
 #endif

@@ -4,10 +4,10 @@ cpp:=~/NDK/android-ndk-r24/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-lin
 #cc:=gcc
 #cpp:=g++
 all:
-	$(cpp) -shared -fpic -std=c++11 -o libperfetto.so perfetto.cc
-	$(cpp) -c -g -std=c++11 -finstrument-functions -fno-emulated-tls -o instrument.o instrument.cc
-	$(cc) -c -g -std=c11 -finstrument-functions -o  test.o test.c
-	$(cpp) -o test test.o instrument.o -L. -lperfetto -llog -pthread
+	#$(cpp) -shared -fpic -std=c++11 -o libmyperfetto.so perfetto.cc
+	$(cpp) -c -g -std=c++11 -fno-emulated-tls -o instrument.o instrument.cc
+	$(cc) -c -g -std=c11 -finstrument-functions -fno-emulated-tls -o  test_instrument.o test_instrument.c
+	$(cpp) -o test_instrument test_instrument.o instrument.o -L. -lmyperfetto -llog -pthread
 
 clean:
-	rm -rf test *.o a.out instrument.log perfetto.o libperfetto.so
+	rm -rf test_instrument *.o a.out instrument.log perfetto.o libmyperfetto.so trace_file.perfetto-trace

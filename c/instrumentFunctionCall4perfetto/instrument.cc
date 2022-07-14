@@ -42,7 +42,7 @@ do {                                                    \
 
 
 PERFETTO_DEFINE_CATEGORIES(
-        perfetto::Category(MINIGUI_TRACE_EVENT)
+        perfetto::Category(MINIGUI_TRACE_CATEGORY)
         .SetDescription("minigui"));
 
 PERFETTO_TRACK_EVENT_STATIC_STORAGE();
@@ -87,7 +87,8 @@ void  __attribute__((no_instrument_function)) __cyg_profile_func_enter( void *fu
     char effectiveAddr[MAX_LEN];
     memset(effectiveAddr, 0, MAX_LEN);
     snprintf(effectiveAddr, MAX_LEN-1, "%x", func_addr);
-    TRACE_EVENT_BEGIN(MINIGUI_TRACE_EVENT, effectiveAddr);
+    TRACE_EVENT_BEGIN(MINIGUI_TRACE_CATEGORY, effectiveAddr);
+//    printf("enter %p\n", effectiveAddr);
 #undef MAX_LEN
 }
 
@@ -95,11 +96,11 @@ void  __attribute__((no_instrument_function)) __cyg_profile_func_exit( void *fun
 {
     // instrument_print("Exit, call_site:%x\n func_addr:%x\n", call_site, func_addr);
 #define MAX_LEN 17
-    // char effectiveAddr[MAX_LEN];
-    // memset(effectiveAddr, 0, MAX_LEN);
-    // snprintf(effectiveAddr, MAX_LEN-1, "%x", func_addr);
-    // TRACE_EVENT_END(MINIGUI_TRACE_EVENT, effectiveAddr);
-    TRACE_EVENT_END(MINIGUI_TRACE_EVENT);
+    char effectiveAddr[MAX_LEN];
+    memset(effectiveAddr, 0, MAX_LEN);
+    snprintf(effectiveAddr, MAX_LEN-1, "%x", func_addr);
+    TRACE_EVENT_END(MINIGUI_TRACE_CATEGORY);
+//    printf("exit %p\n", effectiveAddr);
 #undef MAX_LEN
 }
 
