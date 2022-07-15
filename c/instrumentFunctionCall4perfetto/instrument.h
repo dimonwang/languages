@@ -11,6 +11,7 @@ void  __attribute__((no_instrument_function)) __cyg_profile_func_enter(void *, v
 void  __attribute__((no_instrument_function)) __cyg_profile_func_exit(void *, void *);
 void initialize();
 void deinitialize();
+void d123456789flg();
 #ifdef __cplusplus
 }
 #endif

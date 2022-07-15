@@ -17,12 +17,12 @@ int addmul(int i, int j) {
     return k1+k2;
 }
 
-void d123456789flg(){}
 
 int main(void) {
     printf("%s\n", __FUNCTION__);
     initialize();
-    printf("main:  %p\n", (void*) main);
+    printf("main:  %018p\n", (void*) main);
+    printf("flag:  %018p\n", (void*) d123456789flg);
     printf("addmul:%p\n", (void*) addmul);
     printf("mul:   %p\n", (void*) mul);
     enable_instrument();

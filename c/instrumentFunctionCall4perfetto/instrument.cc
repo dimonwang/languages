@@ -137,39 +137,177 @@ void deinitialize() {
     dealTracing(1);
 }
 
+// donnot delete this
+void d123456789flg(){}
+//////////////////////////////////////////
+#define FUNCNAME_MAX_LEN (256)
+typedef struct _ITEM {
+    long long effectiveAddr;
+    char funcName[FUNCNAME_MAX_LEN];
+} ITEM;
+
+std::vector<ITEM> symbols;
+bool initSymbols() {
+    FILE *p = fopen("./symbols.txt", "r");
+    if (p == NULL) {
+        printf("open file error:%s\n", strerror(errno));
+        return false;
+    }
+
+#define LINE_LEN 1024
+    bool finished = false;
+    while (!finished) {
+        char cnt[LINE_LEN];
+        memset(cnt, 0, LINE_LEN);
+        if (fgets(cnt, LINE_LEN, p) == NULL) {
+            printf("finished\n");
+            break;
+        }
+
+        if (strlen(cnt) <= 16) {
+            printf("empty line?\n");
+            continue;
+        }
+
+        if (cnt[strlen(cnt)-1] == '\n') {
+            cnt[strlen(cnt)-1] = '\0';
+        }
+
+        char *sep = strstr(cnt, " ");
+        ITEM item;
+        strncpy(item.funcName, sep+1, FUNCNAME_MAX_LEN);
+        *sep = '\0';
+        item.effectiveAddr = strtoll(cnt, NULL, 16);
+        symbols.push_back(item);
+        // printf("add item, effectaddr:%016llx, funcName:%s\n", item.effectiveAddr, item.funcName);
+    }
+#undef LINE_LEN
+
+    fclose(p);
+    return true;
+}
+
+void dumpSymbols() {
+    if (symbols.empty()) {
+        initSymbols();
+    }
+
+    int idx = 1;
+    for (auto iter:symbols) {
+        printf("idx:%d, addr:%016llx, name:%s\n", idx++, iter.effectiveAddr, iter.funcName);
+    }
+}
+
+long long offset = 0;
+int initOffset()
+{
+    printf("%s\n", __FUNCTION__);
+    FILE *p = fopen("./symbol_flag.txt", "r");
+    if (p == NULL) {
+        printf("open file error:%s\n", strerror(errno));
+        return 1;
+    }
+
+#define MAX_LEN 17
+    char buf[MAX_LEN];
+    memset(buf, 0, MAX_LEN);
+    if (fgets(buf, MAX_LEN, p) == NULL) {
+        printf("fgets error\n");
+        fclose(p);
+        return 2;
+    }
+    long long ea = strtoll(buf, NULL, 16);
+    offset = (long long)d123456789flg - ea;
+    printf("EA:%016llx, flag:%016llx, offset:%016llx\n", ea, (long long)d123456789flg, offset);
+    fclose(p);
+#undef MAX_LEN
+    return 0;
+}
+
+long long getOffset() {
+    if (offset == 0) {
+        initOffset();
+    }
+
+    return offset;
+}
+
+#define MIN(a,b) ((a > b)?b:a)
+int getFunctionNameByEA(const long long effectiveAddr, char* fname, const int fname_len) {
+    if (fname == NULL) {
+        printf("fname is null\n");
+        return 1;
+    }
+    if (symbols.empty()) {
+        initSymbols();
+    }
+
+    for(auto iter:symbols) {
+        if (iter.effectiveAddr == effectiveAddr) {
+            strncpy(fname, iter.funcName, MIN(fname_len, FUNCNAME_MAX_LEN));
+            return 0;
+        }
+    }
+
+    //not found
+    return 2;
+}
+
+int getFunctionNameByVA(const long long va, char* fname, const int fname_len) {
+    if (fname == NULL) {
+        printf("fname is null\n");
+        return 10;
+    }
+
+    return getFunctionNameByEA(va-getOffset(), fname, fname_len);
+
+}
+
 void  __attribute__((no_instrument_function)) __cyg_profile_func_enter( void *func_addr, void *call_site )
 {
-#define MAX_LEN 17
+#define MAX_ADDR_LEN 128
     if (_flag == 0) return;
-    char virtualFuncAddr[MAX_LEN];
-    memset(virtualFuncAddr, 0, MAX_LEN);
-    snprintf(virtualFuncAddr, MAX_LEN-1, "%p", func_addr);
+    char virtualFunc[MAX_ADDR_LEN];
+    memset(virtualFunc, 0, MAX_ADDR_LEN);
+    if (getFunctionNameByVA((long long)func_addr, virtualFunc, MAX_ADDR_LEN) != 0) {
+        snprintf(virtualFunc, MAX_ADDR_LEN-1, "%p", func_addr);
+        printf("not find func:%s\n", virtualFunc);
+    }
 
-    char virtualCallerAddr[MAX_LEN];
-    memset(virtualCallerAddr, 0, MAX_LEN);
-    snprintf(virtualCallerAddr, MAX_LEN-1, "%p", call_site);
+    TRACE_EVENT_BEGIN(MINIGUI_TRACE_CATEGORY, virtualFunc);
+    char virtualCaller[MAX_ADDR_LEN];
+    memset(virtualCaller, 0, MAX_ADDR_LEN);
+    if (getFunctionNameByVA((long long)func_addr, virtualCaller, MAX_ADDR_LEN) != 0) {
+        snprintf(virtualCaller, MAX_ADDR_LEN-1, "%p", call_site);
+        printf("not find func:%s\n", virtualFunc);
+    }
 
-    TRACE_EVENT_BEGIN(MINIGUI_TRACE_CATEGORY, virtualFuncAddr);
     // printf("%s:%p, enter %s, caller %s\n", __FUNCTION__, (void*) __cyg_profile_func_enter,
-            // virtualFuncAddr, virtualCallerAddr);
-#undef MAX_LEN
+            // virtualFunc, virtualCaller);
+#undef MAX_ADDR_LEN
 }
 
 void  __attribute__((no_instrument_function)) __cyg_profile_func_exit( void *func_addr, void *call_site )
 {
-#define MAX_LEN 17
+#define MAX_ADDR_LEN 128
     if (_flag == 0) return;
-    char virtualFuncAddr[MAX_LEN];
-    memset(virtualFuncAddr, 0, MAX_LEN);
-    snprintf(virtualFuncAddr, MAX_LEN-1, "%p", func_addr);
-
-    char virtualCallerAddr[MAX_LEN];
-    memset(virtualCallerAddr, 0, MAX_LEN);
-    snprintf(virtualCallerAddr, MAX_LEN-1, "%p", call_site);
     TRACE_EVENT_END(MINIGUI_TRACE_CATEGORY);
+    char virtualFunc[MAX_ADDR_LEN];
+    memset(virtualFunc, 0, MAX_ADDR_LEN);
+    if (getFunctionNameByVA((long long)func_addr, virtualFunc, MAX_ADDR_LEN) != 0) {
+        snprintf(virtualFunc, MAX_ADDR_LEN-1, "%p", func_addr);
+        printf("not find func:%s\n", virtualFunc);
+    }
+
+    char virtualCaller[MAX_ADDR_LEN];
+    memset(virtualCaller, 0, MAX_ADDR_LEN);
+    if (getFunctionNameByVA((long long)func_addr, virtualCaller, MAX_ADDR_LEN) != 0) {
+        snprintf(virtualCaller, MAX_ADDR_LEN-1, "%p", call_site);
+        printf("not find func:%s\n", virtualFunc);
+    }
     // printf("%s:%p, exit %s, caller %s\n", __FUNCTION__, (void*) __cyg_profile_func_exit, 
-            // virtualFuncAddr, virtualCallerAddr);
-#undef MAX_LEN
+            // virtualFunc, virtualCaller);
+#undef MAX_ADDR_LEN
 }
 
 #ifdef __cplusplus
