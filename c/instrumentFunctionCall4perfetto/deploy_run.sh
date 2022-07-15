@@ -1,6 +1,7 @@
 #!/bin/sh
 
 adb push libmyperfetto.so /vendor/lib64/
+adb push libshared_funcs.so /vendor/lib64/
 adb push test_no_instrument /vendor/bin/
 adb push test_instrument /vendor/bin/
 adb push symbols.txt /vendor/bin/

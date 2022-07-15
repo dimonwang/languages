@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include "instrument.h"
 #include <unistd.h>
+#include "shared_funcs.h"
 
 int mul(int i, int j) {
     printf("%s:%p\n", __FUNCTION__, (void*) mul);
+    shared_ashiba();
     return i*j;
 }
 

@@ -8,11 +8,13 @@ host_cpp:=g++
 all: inst no_inst
 myperfetto:
 	$(cpp) -shared -fpic -std=c++11 -o libmyperfetto.so perfetto.cc
+shared_funcs:
+	$(cc) -shared -fpic -std=c11 -finstrument-functions -o libshared_funcs.so shared_funcs.c
 
-inst:
+inst: shared_funcs
 	$(cpp) -c -g -std=c++11 -fno-emulated-tls -o instrument.o instrument.cc
 	$(cc) -c -g -std=c11 -finstrument-functions -fno-emulated-tls -o  test_instrument.o test_instrument.c
-	$(cpp) -o test_instrument test_instrument.o instrument.o -L. -lmyperfetto -llog -pthread
+	$(cpp) -o test_instrument test_instrument.o instrument.o -L. -lmyperfetto -llog -pthread -lshared_funcs
 	$(cmd_readelf) -s test_instrument | awk '{if ($$4 == "FUNC" && $$7 != "UND") print $$2,$$8}' > symbols.txt
 	$(cmd_readelf) -s test_instrument | grep -F 'd123456789flg' | awk '{print $$2,$$8}' > symbol_flag.txt
 
@@ -26,4 +28,4 @@ host:
 	$(host_cc) -o host_test host_instrument.o host_test_instrument.o
 
 clean:
-	rm -rf test_instrument test_no_instrument *.o a.out instrument.log perfetto.o trace_file.perfetto-trace example.pftrace host_test symbols.txt symbol_flag.txt
+	rm -rf test_instrument test_no_instrument *.o a.out instrument.log perfetto.o trace_file.perfetto-trace example.pftrace host_test symbols.txt symbol_flag.txt libshared_funcs.so
