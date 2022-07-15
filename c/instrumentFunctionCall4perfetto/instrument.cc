@@ -51,7 +51,7 @@ PERFETTO_DEFINE_CATEGORIES(
 
 PERFETTO_TRACK_EVENT_STATIC_STORAGE();
 
-void initialize0() {
+static void initialize0() {
     perfetto::TracingInitArgs args;
     args.backends |= perfetto::kInProcessBackend;
     args.backends |= perfetto::kSystemBackend;
@@ -61,7 +61,7 @@ void initialize0() {
 }
 
 
-std::unique_ptr<perfetto::TracingSession> StartTracing() {
+static std::unique_ptr<perfetto::TracingSession> StartTracing() {
   // The trace config defines which types of data sources are enabled for
   // recording. In this example we just need the "track_event" data source,
   // which corresponds to the TRACE_EVENT trace points.
@@ -76,7 +76,7 @@ std::unique_ptr<perfetto::TracingSession> StartTracing() {
   return tracing_session;
 }
 
-void StopTracing(std::unique_ptr<perfetto::TracingSession> tracing_session) {
+static void StopTracing(std::unique_ptr<perfetto::TracingSession> tracing_session) {
   // Make sure the last event is closed for this example.
   perfetto::TrackEvent::Flush();
 
@@ -146,8 +146,8 @@ typedef struct _ITEM {
     char funcName[FUNCNAME_MAX_LEN];
 } ITEM;
 
-std::vector<ITEM> symbols;
-bool initSymbols() {
+static std::vector<ITEM> symbols;
+static bool initSymbols() {
     FILE *p = fopen("./symbols.txt", "r");
     if (p == NULL) {
         printf("open file error:%s\n", strerror(errno));
@@ -187,7 +187,7 @@ bool initSymbols() {
     return true;
 }
 
-void dumpSymbols() {
+static void dumpSymbols() {
     if (symbols.empty()) {
         initSymbols();
     }
@@ -198,8 +198,8 @@ void dumpSymbols() {
     }
 }
 
-long long offset = 0;
-int initOffset()
+static long long offset = 0;
+static int initOffset()
 {
     printf("%s\n", __FUNCTION__);
     FILE *p = fopen("./symbol_flag.txt", "r");
@@ -224,7 +224,7 @@ int initOffset()
     return 0;
 }
 
-long long getOffset() {
+static long long getOffset() {
     if (offset == 0) {
         initOffset();
     }
@@ -233,7 +233,7 @@ long long getOffset() {
 }
 
 #define MIN(a,b) ((a > b)?b:a)
-int getFunctionNameByEA(const long long effectiveAddr, char* fname, const int fname_len) {
+static int getFunctionNameByEA(const long long effectiveAddr, char* fname, const int fname_len) {
     if (fname == NULL) {
         printf("fname is null\n");
         return 1;
@@ -253,7 +253,7 @@ int getFunctionNameByEA(const long long effectiveAddr, char* fname, const int fn
     return 2;
 }
 
-int getFunctionNameByVA(const long long va, char* fname, const int fname_len) {
+static int getFunctionNameByVA(const long long va, char* fname, const int fname_len) {
     if (fname == NULL) {
         printf("fname is null\n");
         return 10;
