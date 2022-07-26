@@ -1,6 +1,6 @@
 .PHONY: all clean 
 all:
-	gcc -o main main.c
+	g++ -o main main.cc
 
 clean:
 	rm -f *.o main
