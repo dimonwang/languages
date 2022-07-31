@@ -1,0 +1,1 @@
+int ashiba (void) ;
