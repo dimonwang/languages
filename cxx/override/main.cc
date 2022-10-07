@@ -1,25 +1,18 @@
 #include <iostream>
 
-class Father
+void doIt(char *)
 {
-public:
-	void foo_test() {
-		std::cout << "in Father" << std::endl;
-	};
-};
+	std::cout << "char *" << std::endl;
+}
 
-class Son: Father
+void doIt(void *)
 {
-public:
-	void foo_test() {
-		this->Father::foo_test();
-		std::cout << "in Son" << std::endl;
-	};
-};
-
+	std::cout << "void *" << std::endl;
+}
 
 int main() {
-	Son s;
-	s.foo_test();
+	//doIt(0L);
+	doIt((void*)0);
+	doIt((char*)0);
 	return 0;
 }
