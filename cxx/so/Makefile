@@ -1,0 +1,13 @@
+.PHONY:all clean
+all:
+	g++ -fPIC -shared -o libsub2.so sub2.cc 
+	g++ -fPIC -shared -o libsub1.so sub1.cc 
+	g++ -fPIC -shared -o liba.so a.cc -L. -lsub1
+	# g++ -fPIC -shared -o liba.so a.cc 
+	g++ -fPIC -shared -o libb.so b.cc -L. -lsub2
+	# g++ -fPIC -shared -o libb.so b.cc 
+	g++ -o main main.cc -L. -la -lb
+	# objdump -d main > main.dump
+
+clean:
+	rm -rf main main.o *.so main.dump
