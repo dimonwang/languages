@@ -8,11 +8,11 @@ public:
 	};
 };
 
-class Son: Father
+class Son: public Father
 {
 public:
 	void foo_test() {
-		this->Father::foo_test();
+		// this->Father::foo_test();
 		std::cout << "in Son" << std::endl;
 	};
 };
@@ -21,5 +21,7 @@ public:
 int main() {
 	Son s;
 	s.foo_test();
+    ((Father*)&s)->foo_test();
+    (&s)->foo_test();
 	return 0;
 }
