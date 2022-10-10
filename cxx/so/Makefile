@@ -6,7 +6,8 @@ all:
 	# g++ -fPIC -shared -o liba.so a.cc 
 	g++ -fPIC -shared -o libb.so b.cc -L. -lsub2
 	# g++ -fPIC -shared -o libb.so b.cc 
-	g++ -o main main.cc -L. -la -lb
+	LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH g++ -o main main.cc -L. -la -lb -lsub2 -lsub1
+	# g++ -o main main.cc -L. -la -lb -lsub1 -lsub2
 	# objdump -d main > main.dump
 
 clean:
