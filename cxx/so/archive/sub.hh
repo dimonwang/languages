@@ -1,0 +1,2 @@
+
+int fake_init();
