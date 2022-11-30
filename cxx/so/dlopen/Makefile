@@ -1,6 +1,6 @@
 .PHONY:all clean
 all:
-	gcc -fPIC -shared -o liba.so a.c
+	g++ -fPIC -shared -o liba.so a.cc
 	g++ -o main main.cc -ldl
 	# objdump -d main > main.dump
 
