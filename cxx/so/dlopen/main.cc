@@ -8,7 +8,7 @@ main(void)
 {
    void *handle;
    char *error;
-   int (*func)();
+   int (*func)(int);
    int round = 5;
 
    while (round-- > 0) {
@@ -21,7 +21,7 @@ main(void)
 
        dlerror();    /* Clear any existing error */
 
-       func = (int (*)()) dlsym(handle, "test_a");
+       func = (int (*)(int)) dlsym(handle, "test_a");
 
        error = dlerror();
        if (error != NULL) {
@@ -29,7 +29,7 @@ main(void)
            exit(EXIT_FAILURE);
        }
 
-       func();
+       func(round);
 
        dlclose(handle);
    }
