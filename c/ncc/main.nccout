@@ -1,0 +1,13 @@
+
+D: main()
+F: printf()
+
+
+
+P: /home/ubuntu/mycodes/languages/c/ncc/main.c
+L: main() 3 6
+
+#67 types
+#32 arglists
+#12 regions
+#1 function definitions
