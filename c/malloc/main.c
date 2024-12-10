@@ -1,18 +1,16 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<malloc.h>
 
-int main(void) {
-    int a[0];
+int main(int argc, char** argv) {
 
-    printf("a:%p\n", a);
-
-    void * b = malloc(0);
+    void * b = malloc(10);
     if (b == NULL) {
         printf("malloc fail\n");
         return -1;
     }
 
-    printf("b:%p\n", b);
+    printf("b:%p, usable:%ld\n", b, malloc_usable_size(b));
     free(b);
 	return 0;
 }
