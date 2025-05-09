@@ -1,0 +1,26 @@
+
+test.o：     文件格式 elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <CountChars_>:
+   0:	56                   	push   %rsi
+   1:	40 88 f1             	mov    %sil,%cl
+   4:	48 89 fe             	mov    %rdi,%rsi
+   7:	48 31 d2             	xor    %rdx,%rdx
+   a:	4d 31 c0             	xor    %r8,%r8
+
+000000000000000d <loop>:
+   d:	ac                   	lods   %ds:(%rsi),%al
+   e:	84 c0                	test   %al,%al
+  10:	74 0b                	je     1d <end>
+  12:	38 c8                	cmp    %cl,%al
+  14:	41 0f 94 c0          	sete   %r8b
+  18:	4c 01 c2             	add    %r8,%rdx
+  1b:	eb f0                	jmp    d <loop>
+
+000000000000001d <end>:
+  1d:	48 89 d0             	mov    %rdx,%rax
+  20:	5e                   	pop    %rsi
+  21:	c3                   	retq   
